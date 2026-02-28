@@ -161,7 +161,7 @@ const OnboardingScreen = ({ navigation }: any) => {
           text={currentIndex === Slides.length - 1 ? "Get Started" : "Next"}
           onPress={() => {
             if (currentIndex === Slides.length - 1) {
-              router.push("/auth/onboardSteps");
+              router.push("/auth/signup");
             } else {
               flatListRef.current?.goToSlide(currentIndex + 1);
               setCurrentIndex(currentIndex + 1);

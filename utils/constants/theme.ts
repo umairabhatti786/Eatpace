@@ -6,11 +6,11 @@ export const theme = {
     grey: "#919191",
     grey100: "#868686",
     black100: "#101010",
-
     white: "#FFFFFF",
     light_green: "#D3E6CB",
     thin_green: "#EFF9F0",
     border: "#E8E8E8",
     orange: "#FF8519",
+    raregray:"#9B9B9B"
   },
 };
