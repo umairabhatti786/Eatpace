@@ -65,7 +65,7 @@ const LoggedOutScreen = ({ navigation }: any) => {
                     width={"100%"}
                     size={30}
                     height={sizeHelper.calHp(150)}
-                    // onPress={() => router.push("/main/loggedout")}
+                    onPress={() => router.push("/main/profile")}
                 />
             </View>
         </ScreenLayout>

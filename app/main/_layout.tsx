@@ -6,6 +6,9 @@ export default function MainLayout() {
     <SafeAreaProvider>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="loggedout" />
+        <Stack.Screen name="profile" />
+        <Stack.Screen name="paywall" />
+        <Stack.Screen name="week" />
       </Stack>
     </SafeAreaProvider>
   );

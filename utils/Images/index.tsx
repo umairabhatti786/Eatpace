@@ -10,4 +10,5 @@ export const images = {
 
   clock: require("../../assets/images/clock.png"),
   heating: require("../../assets/images/heating.png"),
+  jamie: require("../../assets/images/jamie.png"),
 };

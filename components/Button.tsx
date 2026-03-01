@@ -22,6 +22,7 @@ const CustomButton = ({
   borderWidth,
   paddingHorizontal,
   fontWeight,
+  alignSelf,
   children,
 }: any) => {
   const memoizedStyle = useMemo(() => {
@@ -37,6 +38,7 @@ const CustomButton = ({
       paddingHorizontal: paddingHorizontal,
       flexDirection: "row",
       gap: sizeHelper.calWp(15),
+      alignSelf:alignSelf,
     };
 
     return [baseStyle, style] as StyleProp<ViewStyle>;

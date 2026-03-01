@@ -11,6 +11,11 @@ export const theme = {
     thin_green: "#EFF9F0",
     border: "#E8E8E8",
     orange: "#FF8519",
-    raregray:"#9B9B9B"
+    raregray:"#9B9B9B",
+    secondgreen:"#3CA74E",
+    lightwhithe:"#E3E3E3",
+    orange_transparent:"#FF85191A",
+    jamie_email:"#545454",
+    icons_bg: "#FFF3E8"
   },
 };
