@@ -1,16 +1,18 @@
 import { theme } from "@/utils/constants/theme";
 import sizeHelper from "@/utils/helpers";
 import {
-    StyleProp,
-    StyleSheet,
-    TextInput,
-    View,
-    ViewStyle,
+  StyleProp,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+  ViewStyle,
 } from "react-native";
 
 import { fonts } from "@/utils/fonts";
 import SearchIcon from "../assets/svgs/search.svg";
-
+import { appStyles } from "@/utils/globalStyles";
+import FilterIcon from "../assets/svgs/filter.svg";
 type Props = {
   placeholder?: string;
   navigation?: any;
@@ -27,6 +29,7 @@ type Props = {
   onAdd?: any;
   ContainerStyle?: StyleProp<ViewStyle>;
   inputRef?: any;
+  isShowFilter?:any
 };
 
 const CustomSearch = ({
@@ -39,6 +42,8 @@ const CustomSearch = ({
   onSubmitEditing,
   ContainerStyle,
   inputRef,
+  isShowFilter,
+  onFilter
 }: Props) => {
   return (
     <>
@@ -46,22 +51,18 @@ const CustomSearch = ({
         style={[
           {
             ...styles.searchContainer,
+            ...appStyles.appShadow,
             width: width || "100%",
             backgroundColor: backgroundColor || theme.colors.white,
             height: sizeHelper.calHp(80),
             gap: sizeHelper.calWp(20),
-            elevation: 4,
-            shadowColor: theme.colors.heading,
-            shadowOffset: { width: 1, height: 3 },
-            shadowOpacity: 0.3,
-            shadowRadius: 5,
           },
           ContainerStyle as StyleProp<ViewStyle>,
         ]}
       >
         <SearchIcon
-          width={sizeHelper.calWp(35)}
-          height={sizeHelper.calWp(35)}
+          width={sizeHelper.calWp(37)}
+          height={sizeHelper.calWp(37)}
         />
         <TextInput
           allowFontScaling={false} // Disable font scaling
@@ -74,6 +75,31 @@ const CustomSearch = ({
           onFocus={onFocus}
           placeholderTextColor={theme.colors.grey}
         />
+        {
+          isShowFilter&&(
+
+             <TouchableOpacity
+             activeOpacity={0.6}
+             onPress={onFilter}
+          style={{
+            ...appStyles.circle,
+            width: sizeHelper.calWp(80),
+            height: "80%",
+            borderRadius: sizeHelper.calWp(20),
+            backgroundColor: "#EFF9F0",
+            marginRight:sizeHelper.calWp(-10)
+          }}
+        >
+          <FilterIcon
+            width={sizeHelper.calWp(40)}
+            height={sizeHelper.calWp(40)}
+          />
+        </TouchableOpacity>
+
+          )
+        }
+
+       
       </View>
     </>
   );
@@ -88,12 +114,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: sizeHelper.calWp(25),
-    borderRadius: sizeHelper.calWp(25),
+    borderRadius: sizeHelper.calWp(30),
   },
   inputContainer: {
     height: "100%",
     flex: 1,
-    fontSize: sizeHelper.calHp(25),
+    fontSize: sizeHelper.calHp(26),
     fontFamily: fonts.OpenRegular,
     padding: 0,
     fontWeight: "500",

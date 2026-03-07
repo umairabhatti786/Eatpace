@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, StyleSheet, TouchableOpacity, View } from "react-native";
 
 import CustomText from "@/components/Text";
 import { theme } from "@/utils/constants/theme";
@@ -12,16 +12,17 @@ import AnimatedToggle from "./Toggle";
 type Props = {
   onNext?: any;
   item?: any;
-  index?: any;
   onSelect?: any;
   onToggle?: any;
+  showLoading?:any
 };
 
-const SelectionCard = ({ onNext, index, item, onSelect, onToggle }: Props) => {
+const SelectionCard = ({ onNext, item, onSelect, onToggle,showLoading }: Props) => {
+  console.log("showLoading",showLoading)
   return (
     <>
       <TouchableOpacity
-        key={index.toString()}
+    
         style={{
           width: "100%",
           height: sizeHelper.calHp(78),
@@ -35,11 +36,11 @@ const SelectionCard = ({ onNext, index, item, onSelect, onToggle }: Props) => {
           backgroundColor:
             item.selected && !item?.isToggle ? "#EFF9F0" : theme.colors.white,
           flexDirection: "row",
-          borderRadius: sizeHelper.calWp(20),
+          borderRadius: sizeHelper.calWp(25),
 
           justifyContent: "space-between",
         }}
-        disabled={item?.isPreparing}
+        disabled={item?.isPreparing ||!onSelect}
         onPress={onSelect}
       >
         <CustomText
@@ -61,7 +62,16 @@ const SelectionCard = ({ onNext, index, item, onSelect, onToggle }: Props) => {
           <>
             {((item.selected && !item?.isToggle && !item?.isNext) ||
               item?.isPreparing) && (
-              <View
+                <>
+                {
+                  showLoading?(
+                    <ActivityIndicator
+                    size={"small"}
+                    color={theme.colors.orange}
+                    />
+                  ):(
+
+                       <View
                 style={{
                   width: sizeHelper.calWp(40),
                   height: sizeHelper.calWp(40),
@@ -73,9 +83,17 @@ const SelectionCard = ({ onNext, index, item, onSelect, onToggle }: Props) => {
               >
                 <TickIcon
                   width={sizeHelper.calWp(23)}
+                  color={theme.colors.white}
                   height={sizeHelper.calWp(23)}
                 />
               </View>
+
+                  )
+                }
+
+                
+                </>
+           
             )}
           </>
         )}

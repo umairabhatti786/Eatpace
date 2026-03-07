@@ -5,7 +5,6 @@ import ProgressBar from "@/components/ProgressBar";
 import ScreenLayout from "@/components/ScreenLayout";
 import CustomSearch from "@/components/Search";
 import CustomText from "@/components/Text";
-
 import DraggableSelector from "@/components/DraggableSelector";
 import SelectionCard from "@/components/SelectionCard";
 import SwipeCards from "@/components/SwipeCard";
@@ -16,13 +15,13 @@ import { appStyles } from "@/utils/globalStyles";
 import sizeHelper from "@/utils/helpers";
 import { images } from "@/utils/Images";
 import { LinearGradient } from "expo-linear-gradient";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
-    Animated,
-    Image,
-    StyleSheet,
-    TouchableOpacity,
-    View,
+  Animated,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import AppIntroSlider from "react-native-app-intro-slider";
 import AvoidsIcon from "../../assets/svgs/avoids.svg";
@@ -33,11 +32,13 @@ import DaysIcon from "../../assets/svgs/daysIcon.svg";
 import NextArrowIcon from "../../assets/svgs/nextArrow.svg";
 import PeopleIcon from "../../assets/svgs/peopleIcon.svg";
 import TickIcon from "../../assets/svgs/tick.svg";
+import { useRouter } from "expo-router";
 
 const OnboardStepsScreen = ({ navigation }: any) => {
+  const router: any = useRouter();
+
   const [currentStep, setCurrentStep] = useState(0);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-
   const flatListRef = useRef<AppIntroSlider>(null);
   const AllergiesSheetRefSnapPoints = useMemo(() => ["80%"], []);
   const AllergiesSheetRef = useRef<any>(null);
@@ -278,12 +279,46 @@ const OnboardStepsScreen = ({ navigation }: any) => {
       title: "Preparing your week",
       des: "This will just take a moment. We’re building your plan for 2 people.",
       data: [
-        { title: "🍽 Selecting meals", isPreparing: true },
-        { title: "📅 Balancing your week", isPreparing: true },
-        { title: "🛒 Preparing shopping list", isPreparing: true },
+        { title: "🍽 Selecting meals", isPreparing: true, isLoading: true },
+        { title: "📅 Balancing your week", isPreparing: true, isLoading: true },
+        {
+          title: "🛒 Preparing shopping list",
+          isPreparing: true,
+          isLoading: true,
+        },
       ],
     },
   ]);
+
+  useEffect(() => {
+    if (currentStep !== onboardSteps.length - 1) return;
+
+    const timers: NodeJS.Timeout[] = [];
+
+    onboardSteps[currentStep]?.data.forEach((_: any, ind: any) => {
+      const timer = setTimeout(
+        () => {
+          setOnboardSteps((prev: any) => {
+            const updatedSteps: any = [...prev];
+
+            if (updatedSteps[currentStep]?.data[ind]) {
+              updatedSteps[currentStep].data[ind].isLoading = false;
+            }
+
+            return updatedSteps;
+          });
+        },
+        (ind + 1) * 1500,
+      );
+
+      timers.push(timer);
+    });
+
+    // Cleanup to prevent memory leaks
+    return () => {
+      timers.forEach((timer) => clearTimeout(timer));
+    };
+  }, [currentStep]);
 
   const onSlideChange = (index: any) => {
     animation.setValue(0);
@@ -298,8 +333,6 @@ const OnboardStepsScreen = ({ navigation }: any) => {
   const onSlideChangeSlideIndex = (index: any) => {
     setCurrentSlideIndex(index);
   };
-
-  //   console.log("ckdnckdnckdc", onboardSteps[currentStep]?.data);
   return (
     <>
       <ScreenLayout>
@@ -349,8 +382,6 @@ const OnboardStepsScreen = ({ navigation }: any) => {
                   shadowRadius: 5,
                   marginTop: sizeHelper.calHp(40),
                   gap: sizeHelper.calHp(20),
-
-                  //   backgroundColor: "red",
                   flex: 0.9,
                 }}
               >
@@ -381,7 +412,6 @@ const OnboardStepsScreen = ({ navigation }: any) => {
                           style={{
                             textAlign: "center",
                             marginHorizontal: sizeHelper.calWp(100),
-                            // marginBottom: sizeHelper.calWp(70),
                           }}
                           size={23}
                           color={theme.colors.secondry}
@@ -390,7 +420,6 @@ const OnboardStepsScreen = ({ navigation }: any) => {
                           style={{
                             width: "110%",
                             height: sizeHelper.calHp(500),
-                            // resizeMode: "contain",
                           }}
                           source={item?.image}
                         />
@@ -435,7 +464,6 @@ const OnboardStepsScreen = ({ navigation }: any) => {
                             borderRadius: sizeHelper.calWp(19),
                             borderWidth: currentSlideIndex == ind ? 1 : -1,
                             borderColor: theme.colors.white,
-
                             backgroundColor:
                               currentSlideIndex == ind
                                 ? theme.colors.primary
@@ -460,8 +488,6 @@ const OnboardStepsScreen = ({ navigation }: any) => {
                         onboardSteps[currentStep]?.data.length - 1
                       ) {
                         onSlideChange(currentStep);
-
-                        //   router.push("/auth/onboardSteps");
                       } else {
                         flatListRef.current?.goToSlide(currentSlideIndex + 1);
                         setCurrentSlideIndex(currentSlideIndex + 1);
@@ -483,21 +509,7 @@ const OnboardStepsScreen = ({ navigation }: any) => {
               </View>
             </>
           ) : (
-            <View
-              style={{
-                backgroundColor: theme.colors.white,
-                borderRadius: sizeHelper.calWp(40),
-                elevation: 10,
-                shadowColor: theme.colors.heading + "50",
-                shadowOffset: { width: 1, height: 3 },
-                shadowOpacity: 0.3,
-                shadowRadius: 5,
-
-                marginTop: sizeHelper.calHp(40),
-                padding: sizeHelper.calWp(35),
-                gap: sizeHelper.calHp(20),
-              }}
-            >
+            <View style={styles.innerContainer}>
               {onboardSteps[currentStep]?.title && (
                 <Animated.View
                   style={{
@@ -507,7 +519,6 @@ const OnboardStepsScreen = ({ navigation }: any) => {
                   <CustomText
                     text={onboardSteps[currentStep]?.title}
                     size={35}
-                    // lineHeight={sizeHelper.calHp(50)}
                     style={{
                       textAlign: "center",
                       marginHorizontal: sizeHelper.calWp(70),
@@ -578,21 +589,19 @@ const OnboardStepsScreen = ({ navigation }: any) => {
                                   borderRadius: sizeHelper.calWp(23),
                                 }}
                               >
-                                {it.icon}
+                                {it?.icon}
                               </View>
 
                               <View style={{ gap: sizeHelper.calHp(10) }}>
                                 <CustomText
-                                  text={it.title}
+                                  text={it?.title}
                                   size={25}
-                                  // lineHeight={sizeHelper.calHp(50)}
-
                                   fontFam={fonts.OpenBold}
                                   color={theme.colors.heading}
                                   fontWeight={"700"}
                                 />
                                 <CustomText
-                                  text={it.des}
+                                  text={it?.des}
                                   size={23}
                                   color={theme.colors.secondry}
                                 />
@@ -614,9 +623,7 @@ const OnboardStepsScreen = ({ navigation }: any) => {
                     )}
                   </View>
                 )}
-                {["selection", "preparing"].includes(
-                  onboardSteps[currentStep]?.type,
-                ) && (
+                {["selection"].includes(onboardSteps[currentStep]?.type) && (
                   <>
                     {onboardSteps[currentStep]?.data.map(
                       (it: any, ind: any) => {
@@ -695,6 +702,7 @@ const OnboardStepsScreen = ({ navigation }: any) => {
                                     }}
                                   >
                                     <TickIcon
+                                      color={theme.colors.white}
                                       width={sizeHelper.calWp(23)}
                                       height={sizeHelper.calWp(23)}
                                     />
@@ -728,6 +736,7 @@ const OnboardStepsScreen = ({ navigation }: any) => {
                                     <NextArrowIcon
                                       width={sizeHelper.calWp(35)}
                                       height={sizeHelper.calWp(35)}
+                                      color={theme.colors.white}
                                     />
                                   </LinearGradient>
                                 </TouchableOpacity>
@@ -752,7 +761,22 @@ const OnboardStepsScreen = ({ navigation }: any) => {
                       }}
                     />
                   </View>
-                  //   <DraggableSelector />
+                )}
+
+                {onboardSteps[currentStep]?.type === "preparing" && (
+                  <>
+                    {onboardSteps[currentStep]?.data.map(
+                      (it: any, ind: any) => {
+                        return (
+                          <SelectionCard
+                            key={ind.toString()}
+                            item={it}
+                            showLoading={it?.isLoading}
+                          />
+                        );
+                      },
+                    )}
+                  </>
                 )}
               </Animated.View>
             </View>
@@ -768,6 +792,11 @@ const OnboardStepsScreen = ({ navigation }: any) => {
             <GradientButton
               text={"Continue"}
               onPress={() => {
+                if (currentStep == onboardSteps.length - 1) {
+                  router.push("(tabs)/week");
+
+                  return;
+                }
                 onSlideChange(currentStep);
               }}
             />
@@ -778,8 +807,6 @@ const OnboardStepsScreen = ({ navigation }: any) => {
                 text={"Everything can be changed later"}
                 size={25}
                 style={{ textAlign: "center" }}
-                // lineHeight={sizeHelper.calHp(50)}
-
                 fontFam={fonts.OpenSemiBold}
                 color={theme.colors.secondry}
                 fontWeight={"600"}
@@ -874,7 +901,6 @@ const OnboardStepsScreen = ({ navigation }: any) => {
                   <SelectionCard
                     key={ind.toString()}
                     item={it}
-                    index={ind}
                     onSelect={() => {
                       const updatedAllergensColor: any = [...allergensColor];
                       updatedAllergensColor[ind].selected =
@@ -895,7 +921,6 @@ const OnboardStepsScreen = ({ navigation }: any) => {
               }}
               bgColor={"transparent"}
             />
-
             <GradientButton
               width={"48%"}
               text={"Save"}
@@ -912,15 +937,22 @@ const OnboardStepsScreen = ({ navigation }: any) => {
 export default OnboardStepsScreen;
 
 const styles = StyleSheet.create({
-  dots: {
-    width: sizeHelper.calWp(13),
-    height: sizeHelper.calWp(13),
-    borderRadius: sizeHelper.calWp(13),
-  },
   dotsContainer: {
     flexDirection: "row",
     alignItems: "center",
     gap: sizeHelper.calWp(10),
     alignSelf: "center",
+  },
+  innerContainer: {
+    backgroundColor: theme.colors.white,
+    borderRadius: sizeHelper.calWp(40),
+    elevation: 10,
+    shadowColor: theme.colors.heading + "50",
+    shadowOffset: { width: 1, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    marginTop: sizeHelper.calHp(40),
+    padding: sizeHelper.calWp(35),
+    gap: sizeHelper.calHp(20),
   },
 });

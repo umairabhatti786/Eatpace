@@ -28,11 +28,11 @@ const CustomButton = ({
   const memoizedStyle = useMemo(() => {
     const baseStyle: ViewStyle = {
       width: width,
-      height: sizeHelper.calHp(height || 75),
+      height: sizeHelper.calHp(height || 80),
       backgroundColor: bgColor || theme.colors.primary,
       justifyContent: "center",
       alignItems: "center",
-      borderRadius: sizeHelper.calHp(borderRadius || 18),
+      borderRadius: sizeHelper.calHp(borderRadius || 25),
       borderWidth: borderWidth || 0,
       borderColor: borderColor,
       paddingHorizontal: paddingHorizontal,
@@ -64,7 +64,7 @@ const CustomButton = ({
       <CustomText
         text={text}
         color={textColor || theme.colors.white}
-        size={size || 23}
+        size={size || 26}
         fontWeight={fontWeight || "600"}
         fontFam={fontFam || fonts.OpenMedium}
       />

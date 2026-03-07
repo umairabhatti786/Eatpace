@@ -1,3 +1,4 @@
+import store from "@/redux/store";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useFonts } from "expo-font";
@@ -6,6 +7,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
+import { Provider } from "react-redux";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -48,13 +50,21 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
+           <Provider
+           store={store}
+           >
       <BottomSheetModalProvider>
+   
+          
+      
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="auth" options={{ headerShown: false }} />
           <Stack.Screen name="main" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         </Stack>
+        
       </BottomSheetModalProvider>
+        </Provider>
     </GestureHandlerRootView>
   );
 }

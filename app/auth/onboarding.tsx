@@ -14,7 +14,6 @@ import OnboardWeekPlanned from "../../assets/svgs/onboardWeekPlanned.svg";
 
 const OnboardingScreen = ({ navigation }: any) => {
   const router: any = useRouter();
-
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef<AppIntroSlider>(null);
 
@@ -88,21 +87,28 @@ const OnboardingScreen = ({ navigation }: any) => {
   return (
     <ScreenLayout paddingHorizontal={-1}>
       <TouchableOpacity
+        disabled={currentIndex == Slides.length - 1}
+        onPress={() => {
+          router.push("auth/onboardSteps");
+        }}
         style={{
           alignItems: "flex-end",
           paddingHorizontal: sizeHelper.calWp(35),
+          height: sizeHelper.calHp(40),
         }}
       >
-        <CustomText
-          text={"Skip"}
-          size={25}
-          style={{
-            textAlign: "center",
-          }}
-          color={theme.colors.secondry}
-          fontFam={fonts.OpenMedium}
-          fontWeight={"600"}
-        />
+        {currentIndex !== Slides.length - 1 && (
+          <CustomText
+            text={"Skip"}
+            size={25}
+            style={{
+              textAlign: "center",
+            }}
+            color={theme.colors.secondry}
+            fontFam={fonts.OpenMedium}
+            fontWeight={"600"}
+          />
+        )}
       </TouchableOpacity>
 
       <View style={{ paddingTop: sizeHelper.calHp(50), height: "65%" }}>
@@ -161,7 +167,7 @@ const OnboardingScreen = ({ navigation }: any) => {
           text={currentIndex === Slides.length - 1 ? "Get Started" : "Next"}
           onPress={() => {
             if (currentIndex === Slides.length - 1) {
-              router.push("/auth/signup");
+              router.push("auth/onboardSteps");
             } else {
               flatListRef.current?.goToSlide(currentIndex + 1);
               setCurrentIndex(currentIndex + 1);

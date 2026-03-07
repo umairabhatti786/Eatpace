@@ -28,8 +28,8 @@ const CustomButton = ({
 }: any) => {
   const memoizedStyle = useMemo(() => {
     const baseStyle: ViewStyle = {
-      width: "100%",
-      height: "100%",
+      width:"100%",
+      height:"100%",
       justifyContent: "center",
       alignItems: "center",
       borderWidth: borderWidth || 0,
@@ -61,7 +61,7 @@ const CustomButton = ({
         borderRadius: sizeHelper.calHp(borderRadius || 25),
         overflow: "hidden",
         width: width,
-        height: sizeHelper.calHp(height || 75),
+        height: sizeHelper.calHp(height || 80),
       }}
     >
       <LinearGradient
@@ -75,7 +75,7 @@ const CustomButton = ({
           <CustomText
             text={text}
             color={textColor || theme.colors.white}
-            size={size || 24}
+            size={size || 26}
             fontWeight={fontWeight || "700"}
             fontFam={fontFam || fonts.OpenBold}
           />
